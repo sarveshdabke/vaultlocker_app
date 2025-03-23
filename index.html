@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <title>VaultLocker</title>
+  <style>
+    /* Body styling with background effects */
+    body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: url("{{ url_for('static', filename='images/background1.jpg') }}") no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+}
+
+
+    /* Background pattern */
+    .background-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://www.transparenttextures.com/patterns/asfalt-light.png'); /* Example texture */
+      opacity: 0.1; /* Make it subtle */
+      z-index: 0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+      position: relative; /* Position relative to allow z-index */
+      z-index: 1; /* Bring content above background */
+    }
+
+    /* Logo container with logo and heading */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+  width: 150px;  /* Adjust logo size */
+  height: 150px; /* Ensure it's a perfect circle */
+  border-radius: 50%; /* Make it circular */
+  object-fit: cover; /* Ensure the image scales properly */
+  margin-bottom: 20px;
+  border: 3px solid #ffcc00; /* Optional: Add a border */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Optional: Soft shadow */
+}
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    /* Action container for buttons */
+    .action-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    /* Register button styling */
+    .register-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      width: 200px;
+      margin-bottom: 15px;
+    }
+
+    .register-btn:hover {
+      background-color: #45a049;
+      transform: scale(1.05);
+    }
+
+    /* Login link styling */
+    .login-link {
+      font-size: 16px;
+      color: #fbfffb;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .login-link:hover {
+      color: #45a049;
+    }
+
+    /* Responsive design */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 28px;
+      }
+
+      .register-btn {
+        width: 100%; /* Full width on small screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-pattern"></div> <!-- Background pattern -->
+  <div class="container">
+    <!-- Logo and Heading Section -->
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+      <h1>VaultLocker</h1>
+    </div>
+
+    <!-- Register Section -->
+    <div class="action-container">
+      <button class="register-btn" onclick="window.location.href='/register'">Register</button>
+      <a href="/login" class="login-link">Already have an account? Login here</a>
+    </div>
+  </div>
+</body>
+</html>
