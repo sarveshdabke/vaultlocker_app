@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <title>Profile - VaultLocker</title>
+
+  <script>
+    function applySavedTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.className = savedTheme;
+    }
+
+    window.onload = function() {
+      applySavedTheme();
+    };
+
+    function changeProfilePic(event) {
+      var file = event.target.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profile-pic').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function uploadProfilePic() {
+      const fileInput = document.getElementById('profile-pic-input');
+      if (fileInput.files.length === 0) {
+        alert("Please select a file.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      let formData = new FormData();
+      formData.append("file", file);
+      formData.append("user_id", "{{ user.id }}");
+
+      fetch("/upload_profile_pic", {
+        method: "POST",
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('profile-pic').src = `/profile_pictures/${data.filename}`;
+          alert("Profile picture updated successfully!");
+        } else {
+          alert("Error: " + data.error);
+        }
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    function maskEmail(email) {
+      let parts = email.split("@");
+      if (parts.length !== 2) return email; // Return original if invalid
+
+      let namePart = parts[0];
+      let domain = parts[1];
+
+      let maskedName = namePart.slice(0, 2) + "*****"; // Show first 2 letters
+      let maskedEmail = maskedName + "@" + domain;
+      return maskedEmail;
+  }
+
+  function maskPhone(phone) {
+      if (phone.length < 4) return phone; // Return as-is if too short
+
+      let maskedPhone = phone.slice(0, 2) + "*****" + phone.slice(-2);
+      return maskedPhone;
+  }
+
+  // Apply masking on page load
+  window.onload = function() {
+      applySavedTheme(); // Load theme
+
+      let email = "{{ user.email }}";
+      let phone = "{{ user.phone }}";
+
+      document.getElementById("masked-email").textContent = maskEmail(email);
+      document.getElementById("masked-phone").textContent = maskPhone(phone);
+  };
+  </script>
+
+  <style>
+    /* Background */
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("{{ url_for('static', filename='images/background1.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    /* Profile Container */
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    /* Light Theme */
+    body.light .container {
+      background: rgba(255, 255, 255, 0.9);
+      color: black;
+    }
+
+    /* Dark Theme */
+    body.dark .container {
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #4CAF50;
+    }
+
+    /* Profile Picture */
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #4CAF50;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .profile-pic:hover {
+      transform: scale(1.05);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #ffcc00;
+      color: black;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    label:hover {
+      background-color: #e6b800;
+    }
+
+    p {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    /* Buttons */
+    button {
+      background: #ffcc00;
+      color: black;
+      font-weight: bold;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #e6b800;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      background-color: #d4a900;
+      transform: scale(0.95);
+    }
+    /* Back Arrow Button - Fixed Position & Higher Z-Index */
+.back-arrow {
+  position: fixed; /* Ensure it stays in the same place */
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  color: white;
+  text-decoration: none;
+  z-index: 1000; /* Higher than the container */
+  transition: transform 0.2s, color 0.3s;
+}
+
+.back-arrow:hover {
+  transform: scale(1.1);
+  color: #ffcc00;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="background-container"></div>
+  <a href="/home" class="back-arrow">&#8592;</a>  <!-- Unicode for ⬅ -->
+
+  <div class="container">
+    <h1>Profile</h1>
+
+    <!-- Profile Picture -->
+    <img src="{{ url_for('get_profile_picture', filename=user.profile_picture) }}" alt="Profile Picture" class="profile-pic" id="profile-pic">
+    
+    <!-- Hidden File Input for Profile Picture Change -->
+    <input type="file" id="profile-pic-input" accept="image/*" onchange="changeProfilePic(event)">
+    <label for="profile-pic-input">Change Profile Picture</label>
+
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> <span id="masked-email"></span></p>
+<p><strong>Phone:</strong> <span id="masked-phone"></span></p>
+
+    
+    <button onclick="uploadProfilePic()">Save Profile Picture</button>
+  </div>
+</body>
+</html>

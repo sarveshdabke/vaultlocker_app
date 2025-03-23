@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <title>About VaultLocker</title>
+
+  <script>
+    function applySavedTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.className = savedTheme;
+    }
+    window.onload = applySavedTheme;
+  </script>
+
+  <style>
+    /* Background */
+    .background-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{{ url_for('static', filename='images/background1.jpg') }}") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    /* Container Styling */
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+
+    /* Light & Dark Themes */
+    body.light .container {
+        background: rgba(255, 255, 255, 0.9);
+        color: black;
+    }
+    body.dark .container {
+        background: rgba(0, 0, 0, 0.75);
+        color: white;
+    }
+
+    /* Typography */
+    h1 { font-size: 36px; font-weight: bold; margin-bottom: 20px; color: #4CAF50; }
+    h2 { font-size: 24px; color: #756400; margin-top: 20px; }
+    p, ul, ol { font-size: 18px; line-height: 1.6; text-align: justify; }
+    
+    ul, ol { text-align: left; padding-left: 20px; }
+    ul li { margin-bottom: 10px; list-style: none; position: relative; }
+    ul li::before { content: "✔"; color: #4CAF50; font-weight: bold; position: absolute; left: -20px; }
+
+    /* Back Arrow Button - Fixed Position & Higher Z-Index */
+.back-arrow {
+  position: fixed; /* Ensure it stays in the same place */
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  color: white;
+  text-decoration: none;
+  z-index: 1000; /* Higher than the container */
+  transition: transform 0.2s, color 0.3s;
+}
+
+.back-arrow:hover {
+  transform: scale(1.1);
+  color: #ffcc00;
+}
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .container { padding: 20px; margin: 20px; }
+        h1 { font-size: 28px; }
+        h2 { font-size: 22px; }
+        p, ul, ol { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-container"></div>
+  <a href="/home" class="back-arrow">&#8592;</a>  <!-- Back to Home -->
+
+  <div class="container">
+    <h1>About VaultLocker</h1>
+    <p><strong>VaultLocker</strong> is a secure, feature-rich password manager designed to help users store, manage, and encrypt their sensitive login credentials in a highly protected environment.</p>
+
+    <h2>🔒 What is VaultLocker?</h2>
+    <p>In today’s digital world, managing passwords can be a challenge. Many people reuse weak passwords, making their accounts vulnerable to hacking. VaultLocker solves this problem by offering a secure vault where users can safely store their credentials with encryption and OTP-based authentication to prevent unauthorized access.</p>
+
+    <h2>✨ Key Features</h2>
+    <ul>
+      <li>✔ <strong>Encrypted Vault</strong> – Store and encrypt passwords securely.</li>
+      <li>✔ <strong>OTP Authentication</strong> – Extra layer of security for login and verification.</li>
+      <li>✔ <strong>Auto Lockout Protection</strong> – Prevent brute-force attacks by limiting failed login attempts.</li>
+      <li>✔ <strong>Custom Decryption Time</strong> – Control how long decrypted passwords remain visible.</li>
+      <li>✔ <strong>Dark & Light Themes</strong> – Choose between different UI themes.</li>
+      <li>✔ <strong>Account Deletion Requests</strong> – Users can request complete removal of their data.</li>
+      <li>✔ <strong>Login Activity Logs</strong> – View login attempts, IP & device details.</li>
+    </ul>
+
+    <h2>🔍 How It Works?</h2>
+    <ol>
+      <li>1️⃣ <strong>Register/Login</strong> securely using your credentials.</li>
+      <li>2️⃣ <strong>Store Your Passwords</strong> in an encrypted format.</li>
+      <li>3️⃣ <strong>Access & Manage</strong> your saved passwords anytime.</li>
+      <li>4️⃣ <strong>Enable Decryption</strong> for 10 seconds only after authentication.</li>
+      <li>5️⃣ <strong>Customize Settings</strong> with themes and profile updates.</li>
+    </ol>
+
+    <h2>🛡 Why Choose VaultLocker?</h2>
+    <ul>
+      <li>🔐 <strong>Data Security</strong> – Your passwords are encrypted using industry standards.</li>
+      <li>⚡ <strong>Quick Access</strong> – Retrieve your passwords instantly.</li>
+      <li>📱 <strong>User-Friendly Interface</strong> – Designed for ease of use while maintaining high security.</li>
+      <li>💡 <strong>Privacy First</strong> – No third-party access to your data.</li>
+    </ul>
+
+    <h2>📌 Technologies Used</h2>
+    <p>VaultLocker is built with modern web technologies for security and performance:</p>
+    <ul>
+      <li>✅ <strong>Backend:</strong> Flask (Python)</li>
+      <li>✅ <strong>Frontend:</strong> HTML, CSS, JavaScript</li>
+      <li>✅ <strong>Database:</strong> SQLite</li>
+      <li>✅ <strong>Security:</strong> AES Encryption, OTP Authentication</li>
+    </ul>
+
+    <p>VaultLocker is your personal security companion, ensuring that your passwords are always safe, accessible, and encrypted. Stay secure, stay organized! 🚀</p>
+  </div>
+</body>
+</html>

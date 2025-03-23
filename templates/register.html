@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <title>Register - VaultLocker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url("{{ url_for('static', filename='images/background1.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #2C3E50;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #45a049;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      display: none;
+    }
+
+    /* Password Strength Indicator */
+    #password-strength {
+      margin-top: 10px;
+      font-size: 14px;
+      color: white;
+    }
+
+    #strength-text {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    #strength-bar {
+      height: 8px;
+      width: 100%;
+      border-radius: 5px;
+      background-color: #ddd; /* Default gray */
+      margin-top: 5px;
+      transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    }
+    .password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px; /* Space for eye icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+
+.toggle-password:hover {
+    color: #000;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Register</h1>
+    <form id="register-form" method="POST">
+      <input type="text" name="username" id="username" placeholder="Username" required>
+      <div class="error-message" id="username-error">Username already exists. Try another username.</div>
+
+      <input type="email" name="email" id="email" placeholder="Email" required>
+      <div class="error-message" id="email-error">Email already exists. Try another one.</div>
+
+      <input type="text" name="phone" id="phone" placeholder="Phone Number" required>
+      <div class="error-message" id="phone-error">Phone number already exists. Try another one.</div>
+
+      <!-- Password Fields -->
+      <div class="password-container">
+        <input type="password" name="password" id="password" placeholder="Enter Password" required>
+        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+    </div>    
+      <div id="password-strength">
+        <span id="strength-text">Strength: Weak</span>
+        <div id="strength-bar"></div>
+      </div>
+      <div class="password-container">
+        <input type="password" name="confirm_password" id="confirm-password" placeholder="Confirm Password" required>
+        <span class="toggle-password" onclick="togglePassword('confirm-password')">👁️</span>
+    </div>    
+      <div class="error-message" id="password-error">Passwords do not match.</div>
+
+      <button type="submit" id="register-button" disabled>Register</button>
+    </form>
+    <a href="/login">Already have an account? Login here</a>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordInput = document.getElementById('password');
+      const strengthText = document.getElementById('strength-text');
+      const strengthBar = document.getElementById('strength-bar');
+      const registerButton = document.getElementById('register-button');
+
+      function updatePasswordStrength() {
+        const password = passwordInput.value;
+
+        // Password criteria
+        const lengthCheck = password.length >= 8;
+        const uppercaseCheck = /[A-Z]/.test(password);
+        const lowercaseCheck = /[a-z]/.test(password);
+        const numberCheck = /[0-9]/.test(password);
+        const specialCharCheck = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password);
+
+        let strength = 0;
+        if (lengthCheck) strength++;
+        if (uppercaseCheck) strength++;
+        if (lowercaseCheck) strength++;
+        if (numberCheck) strength++;
+        if (specialCharCheck) strength++;
+
+        // Update Strength Text and Bar Color
+        if (strength === 0) {
+          strengthText.textContent = "Strength: Weak";
+          strengthBar.style.width = "0%";
+          strengthBar.style.backgroundColor = "#ddd"; // Gray
+        } else if (strength === 1 || strength === 2) {
+          strengthText.textContent = "Strength: Weak";
+          strengthBar.style.width = "25%";
+          strengthBar.style.backgroundColor = "red";
+        } else if (strength === 3) {
+          strengthText.textContent = "Strength: Medium";
+          strengthBar.style.width = "50%";
+          strengthBar.style.backgroundColor = "orange";
+        } else if (strength === 4) {
+          strengthText.textContent = "Strength: Strong";
+          strengthBar.style.width = "75%";
+          strengthBar.style.backgroundColor = "blue";
+        } else if (strength === 5) {
+          strengthText.textContent = "Strength: Very Strong";
+          strengthBar.style.width = "100%";
+          strengthBar.style.backgroundColor = "green";
+        }
+
+        // Enable Register button only for strong passwords
+        registerButton.disabled = strength < 3;
+      }
+
+      // Attach the function to password input event
+      passwordInput.addEventListener('input', updatePasswordStrength);
+
+      // Form validation for password confirmation
+      document.getElementById('register-form').addEventListener('submit', function(event) {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirm-password').value;
+
+        if (password !== confirmPassword) {
+          event.preventDefault();
+          document.getElementById('password-error').style.display = 'block';
+        }
+      });
+    });
+    function togglePassword(inputId) {
+    var input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+  </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - VaultLocker</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background: url("{{ url_for('static', filename='images/background1.jpg') }}") no-repeat center center fixed;
+    background-size: cover; /* Ensures the image covers the entire screen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    background: #2C3E50; /* Dark Blue-Gray */
+    color: white; /* Text color for better readability */
+    padding: 60px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Slightly darker shadow */
+    width: 300px;
+    text-align: center;
+}
+
+
+        h2 {
+            margin-bottom: 20px;
+        }
+        input[type="email"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fdfeff; /* Slightly lighter blue */
+    color: rgb(2, 0, 0);
+    border: 3px solid #000408; /* Darker border */
+
+        }
+        button {
+            background-color: #E74C3C;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 50%;
+        }
+        button:hover {
+            background-color: #C0392B;
+        }
+        .message {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #dc3545; /* Red color for error messages */
+        }
+        .success {
+            color: #28a745; /* Green color for success messages */
+        }
+        .loading {
+            display: none;
+            margin-top: 10px;
+        }
+        /* Back Arrow Button */
+    .back-arrow {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 30px;
+        color: white;
+        text-decoration: none;
+        transition: transform 0.2s, color 0.3s;
+    }
+    .back-arrow:hover {
+        transform: scale(1.1);
+        color: #ffcc00;
+    }
+
+    </style>
+    <script>
+        function sendOTP() {
+    const email = document.getElementById("email").value;
+    const messageDiv = document.getElementById("message");
+    const loadingIndicator = document.getElementById("loading");
+    messageDiv.textContent = "";
+    loadingIndicator.style.display = "block";
+
+    if (!email.trim()) {  // ✅ Trim spaces to prevent accidental empty submissions
+    alert("Please enter your email.");
+    loadingIndicator.style.display = "none";
+    return;
+}
+
+    fetch("http://127.0.0.1:5000/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        loadingIndicator.style.display = "none";
+        if (data.success) {
+            messageDiv.textContent = "OTP sent successfully!";
+            messageDiv.className = "message success";
+        } else {
+            messageDiv.textContent = data.message;  // ✅ Show actual error message
+            messageDiv.className = "message";
+        }
+    })
+    .catch(error => {
+        loadingIndicator.style.display = "none";
+        console.error("Error:", error);
+        messageDiv.textContent = "An error occurred. Please try again.";
+        messageDiv.className = "message";
+    });
+}
+
+function verifyOTP() {
+    const otp = document.getElementById("otp").value;
+    if (!otp) {
+        alert("Please enter the OTP.");
+        return;
+    }
+
+    fetch("/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ otp: otp })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Server Response:", data);  // Debugging log
+
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            alert("❌ Wrong OTP. Please try again.");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+    </script>
+</head> 
+<body>
+    <a href="/login" class="back-arrow">&#8592;</a>  <!-- Back to Home -->
+    <div class="container">
+        <h2>OTP Verification</h2>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" required >
+        <button onclick="sendOTP()">Send OTP</button>
+        
+        <br><br>
+        
+        <label for="otp">Enter OTP:</label>
+        <input type="text" id="otp" required>
+        <button onclick="verifyOTP()">Verify OTP</button>
+        
+        <div id="loading" class="loading">Loading...</div>
+        <div id="message" class="message"></div>
+        
+    </div>
+</body>
+</html>

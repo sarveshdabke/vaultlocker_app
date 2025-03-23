@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="preload" as="image" href="{{ url_for('static', filename='images/background.jpg') }}">
+  <title>Login - VaultLocker</title>
+  <style>
+   body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: url("{{ url_for('static', filename='images/background1.jpg') }}") no-repeat center center fixed;
+  background-size: cover;
+  background-color: #f4f4f9; /* Fallback color */
+}
+
+
+    /* Centering the container */
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: none;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #d9e4da;
+      margin-bottom: 20px;
+    }
+
+    /* Form styling */
+    form {
+      background-color: #2C3E50;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    /* Focus effect for input fields */
+    input:focus {
+      outline: none;
+      border-color: #4CAF50;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Links styling */
+    a {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: white; /* Change text color to white */
+  text-decoration: none;
+  font-weight: bold; /* Optional: Make text bold */
+}
+
+
+    a:hover {
+  color: #ddd; /* Light gray on hover */
+}
+
+    /* Error Message Styling */
+    .error-message {
+  color: white;
+  background-color: rgb(2, 0, 0);
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+  text-align: center;
+  display: block;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+.success {
+  background-color: green; /* ✅ For successful login message */
+}
+    html, body {
+  height: 100%;
+  min-height: 100vh;
+}
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px; /* Space for eye icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+
+.toggle-password:hover {
+    color: #000;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Login</h1>
+    <form method="POST">
+      <input type="text" name="username" placeholder="Username" required><br>
+      
+      <div class="password-container">
+        <input type="password" name="password" id="password" placeholder="Enter Password" required>
+        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+    </div>
+    
+
+      <button type="submit">Login</button>
+      <a href="/forgot-password">Forgot password?</a>
+      
+      
+      {% if error_message %}
+  <div class="error-message" id="error-message">
+    {{ error_message }}
+  </div>
+{% endif %}
+
+{% if attempts_left is not none and attempts_left > 0 %}
+  <div class="error-message" id="attempts-left-message">
+    ⚠️ You have <strong>{{ attempts_left }}</strong> attempts left.
+  </div>
+{% endif %}
+
+  
+    {% if lockout_time %}
+      <div class="error-message" id="lockout-message">
+        ❌ Too many failed attempts. Try again in <span id="countdown">{{ lockout_time }}</span> seconds.
+      </div>
+    {% endif %}
+    
+
+    </form>
+
+    <a href="/otp-verification">Try Another Way?</a>
+    <a href="/register">Register Here</a>
+  </div>
+  <script>
+    // ✅ Hide error messages after 3 seconds (except lockout message)
+    setTimeout(function() {
+        let messages = document.querySelectorAll('.error-message:not(#lockout-message)');
+        messages.forEach(msg => {
+            msg.style.display = 'none';
+        });
+    }, 3000);
+
+    // ✅ Countdown timer stays visible
+    let lockoutTimeElement = document.getElementById('countdown');
+    if (lockoutTimeElement) {
+        let lockoutTime = parseInt(lockoutTimeElement.innerText || "0");
+
+        if (lockoutTime > 0) {
+            let countdownInterval = setInterval(() => {
+                if (lockoutTime <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = "/login";  // ✅ Reload the page without counting as a new attempt
+                } else {
+                    lockoutTime--;
+                    lockoutTimeElement.innerText = lockoutTime;
+                }
+            }, 1000);
+        }
+    }
+    // ✅ Prevent refresh from counting as a failed attempt
+if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+    let attemptsLeftMessage = document.getElementById("attempts-left-message");
+    if (attemptsLeftMessage) {
+        attemptsLeftMessage.style.display = "none"; // ✅ Hide remaining attempts on page refresh
+    }
+}
+    function togglePassword(inputId) {
+    var input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+
+</body>
+</html>

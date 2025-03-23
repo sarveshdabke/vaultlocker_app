@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <title>Settings - VaultLocker</title>
+  
+  <script>
+    window.onload = function() {
+    // Load saved theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.className = savedTheme;
+
+    // ✅ Fix: Set the correct value in the dropdown
+    document.getElementById('theme').value = savedTheme;
+
+    document.getElementById('current-theme').textContent = `Current Theme: ${savedTheme.charAt(0).toUpperCase() + savedTheme.slice(1)}`;
+};
+
+function applyTheme() {
+    const theme = document.getElementById('theme').value;
+    document.body.className = theme;
+    localStorage.setItem('theme', theme);
+
+    document.getElementById('current-theme').textContent = `Current Theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)}`;
+}
+  </script>
+  
+  <style>
+    /* Background Image */
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("{{ url_for('static', filename='images/background1.jpg') }}") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    /* Light Theme */
+    body.light .container {
+      background: rgba(255, 255, 255, 0.9);
+      color: black;
+    }
+
+    /* Dark Theme */
+    body.dark .container {
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+    }
+
+    /* Heading */
+    h1 {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #4CAF50;
+    }
+
+    /* Labels */
+    label {
+      display: block;
+      text-align: left;
+      margin: 10px 0 5px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #FFD700; /* Gold */
+    }
+
+    /* Dropdown and Button */
+    select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: none;
+      font-size: 18px;
+    }
+
+    select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.3); /* Light background */
+  color: black; /* Ensure text is visible */
+  outline: none;
+  transition: background 0.3s, color 0.3s, border 0.3s;
+}
+
+    select:focus {
+      border: 1px solid #ffcc00;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    /* 🔥 Dark Mode Fix - Make Text White */
+body.dark select {
+  background: rgba(50, 50, 50, 0.9); /* Darker background */
+  color: white !important; /* Ensure white text */
+  border: 1px solid #FFD700; /* Gold border for contrast */
+}
+
+/* 🔥 Light Mode Fix - Make Text Black */
+body.light select {
+  background: white;
+  color: black !important;
+  border: 1px solid #ccc;
+}
+
+body.light select:hover, 
+body.light select:focus {
+  background: #f5f5f5;
+  border: 1px solid #4CAF50;
+}
+
+/* 🔥 Ensure Options Inside Dropdown are Visible */
+select option {
+  background: white;
+  color: black;
+}
+
+body.dark select option {
+  background: black; /* Dark background inside dropdown */
+  color: white;
+}
+
+    button {
+      background: #ffcc00;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #e6b800;
+    }
+
+    /* Current Theme Display */
+    .current-theme {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+        margin: 20px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      label {
+        font-size: 16px;
+      }
+
+      select, button {
+        font-size: 16px;
+      }
+
+      .current-theme {
+        font-size: 16px;
+      }
+    }
+    .delete-btn {
+  background: red;
+  color: white;
+  font-weight: bold;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-btn:hover {
+  background: darkred;
+}
+/* Back Arrow Button */
+/* Back Arrow Button - Fixed Position & Higher Z-Index */
+.back-arrow {
+  position: fixed; /* Ensure it stays in the same place */
+  top: 20px;
+  left: 20px;
+  font-size: 30px;
+  color: white;
+  text-decoration: none;
+  z-index: 1000; /* Higher than the container */
+  transition: transform 0.2s, color 0.3s;
+}
+
+.back-arrow:hover {
+  transform: scale(1.1);
+  color: #ffcc00;
+}
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px; /* Space for eye icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+
+.toggle-password:hover {
+    color: #000;
+}
+hr {
+  border: none;  /* Remove default styling */
+  height: 2px;   /* Thickness of the line */
+  background-color: #FFD700;  /* Gold color */
+  margin: 20px 0;  /* Space above and below */
+}
+  </style>
+</head>
+<body>
+  <div class="background-container"></div>
+  <a href="/home" class="back-arrow">&#8592;</a>  <!-- Unicode for ⬅ -->
+
+  <div class="container">
+    <h1>Settings</h1>
+    
+    <label for="theme">Choose Theme:</label>
+    <select id="theme" name="theme">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+    
+    <button onclick="applyTheme()">Apply Theme</button>
+    <div class="current-theme" id="current-theme">Current Theme: Light</div>
+    <div class="last-user">
+      <hr>
+      <p><strong>Last Logged-in User:</strong> {{ last_user }}</p>
+      <p><strong>Last Login Time:</strong> {{ last_time }}</p>
+      <hr>
+      <label for="decryption-time">Decryption Visibility Duration (seconds):</label>
+<select id="decryption-time">
+  <option value="5">5 seconds</option>
+  <option value="10">10 seconds (Default)</option>
+  <option value="15">15 seconds</option>
+  <option value="30">30 seconds</option>
+</select>
+<button onclick="applyDecryptionTime()">Save</button>
+
+<script>
+  function applyDecryptionTime() {
+      const time = document.getElementById('decryption-time').value;
+      localStorage.setItem('decryptionTime', time);
+      alert(`Decryption visibility time set to ${time} seconds!`);
+  }
+
+  window.onload = function () {
+      const savedTime = localStorage.getItem('decryptionTime') || '10'; // Default 10s
+      document.getElementById('decryption-time').value = savedTime;
+  };
+</script>
+<!-- Account Deletion Section -->
+<hr>
+<h2 style="color: red;">Delete Account</h2>
+<p>Warning: This action is irreversible. Your data will be permanently deleted.</p>
+
+<!-- Request Account Deletion Button -->
+<button class="delete-btn" onclick="showPasswordField()">Request Account Deletion</button>
+
+<!-- Hidden Password Input & Confirm Button (Initially Hidden) -->
+<div id="delete-confirmation" style="display: none; margin-top: 10px;">
+    <label for="delete-password">Enter your password to confirm:</label>
+    <div class="password-container">
+      <input type="password" name="password" id="password" placeholder="Enter Password" required>
+      <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+  </div>  
+    <button class="delete-btn" onclick="confirmDelete()">Confirm Deletion</button>
+</div>
+
+<script>
+  function showPasswordField() {
+      // Show the password input field & confirm button
+      document.getElementById("delete-confirmation").style.display = "block";
+  }
+
+  function confirmDelete() {
+      let password = document.getElementById("delete-password").value;
+
+      if (!password) {
+          alert("Please enter your password before confirming deletion.");
+          return;
+      }
+
+      let confirmAction = confirm("Are you sure you want to delete your account? This action cannot be undone.");
+      if (confirmAction) {
+          fetch("/delete-account", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ user_id: "{{ user.id }}", password: password })  // Send password
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert("Your account deletion request has been received.");
+                  window.location.href = "/logout";  // Log out after deletion request
+              } else {
+                  alert("Error: " + data.error);
+              }
+          })
+          .catch(error => console.error("Error:", error));
+      }
+  }
+  function togglePassword(inputId) {
+    var input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+    </div>
+  </div>
+</body>
+</html>
