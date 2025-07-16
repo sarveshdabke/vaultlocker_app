@@ -81,4 +81,4 @@ Optional login restrictions for untrusted devices
 📸 Screenshots
 
 ![VaultLocker Registration](static/images/Registration Page.png)
-![Dashboard](static/images/dashboard.png)
+![Dashboard](static/images/Dashboard.png)
