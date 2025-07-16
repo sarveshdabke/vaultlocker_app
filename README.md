@@ -125,3 +125,17 @@ See the LICENSE file for details.
 👤 Author
 Developed by Sarvesh C. Dabke
 🔗 GitHub: https://github.com/sarveshdabke
+
+
+
+---
+
+Let me know if you want:
+
+- A logo/banner at the top  
+- Live hosted demo badges  
+- Screenshot images  
+- Deployment-ready configuration (e.g., for PythonAnywhere, Render, or Vercel)
+
+I'll help you customize that too!
+
