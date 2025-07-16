@@ -52,7 +52,7 @@ VaultLocker/
 ## 🚀 How to Run Locally
 
 1. Clone the repository:
-   git clone https://github.com/yourusername/vaultlocker.git
+   git clone https://github.com/sarveshdabke/vaultlocker_app
    cd vaultlocker
 2. Create and activate a virtual environment:
    python -m venv venv
@@ -78,3 +78,7 @@ IP & device tracking on login attempts
 Optional login restrictions for untrusted devices
 
 
+📸 Screenshots
+
+![VaultLocker Registration](static/images/login.png)
+![Dashboard](static/images/dashboard.png)
