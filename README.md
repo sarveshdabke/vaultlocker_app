@@ -78,7 +78,50 @@ IP & device tracking on login attempts
 Optional login restrictions for untrusted devices
 
 
-📸 Screenshots
+#### 📝 Registration Page
+![Registration Page](static/images/RegistrationPage.png)
 
-![VaultLocker Registration](static/images/Registration Page.png)
+---
+
+#### 🧭 Dashboard
 ![Dashboard](static/images/Dashboard.png)
+
+---
+
+#### ➕ Add Password Page
+![Add Password Page](static/images/AddPasswordPage.png)
+
+---
+
+#### 🔐 View Password – Authentication Step
+![View Password Authentication](static/images/ViewPasswordAuthentication.png)
+
+---
+
+#### 👁️ View Password Page
+![View Password Page](static/images/ViewPasswordPage.png)
+
+---
+
+#### ⚙️ Settings Page
+![Settings Page](static/images/SettingsPage.png)
+
+
+📌 Future Improvements
+Multi-factor authentication (MFA)
+
+Password generator tool
+
+Browser extension for autofill
+
+Cloud backup and restore
+
+User analytics dashboard
+
+📄 License
+This project is licensed under the MIT License.
+See the LICENSE file for details.
+
+👤 Author
+Developed by Sarvesh C. Dabke
+🔗 GitHub: https://github.com/sarveshdabke
